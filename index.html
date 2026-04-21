@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)file:///Users/robertmerz/Downloads/index%20(10).html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuclear Dust Coffee</title>
+  <link href="./Nuclear Dust Coffee_files/css2" rel="stylesheet">
+  <style>
+    :root {
+      --black: #080a06;
+      --green: #39FF14;
+      --amber: #C8963E;
+      --cream: #f0e6c8;
+      --dark-green: #0a1f05;
+      --mid: #1a1a1a;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--black);
+      color: var(--cream);
+      font-family: 'Share Tech Mono', monospace;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.35;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      padding: 2rem; text-align: center;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(57,255,20,0.06) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      animation: pulse 4s ease-in-out infinite; pointer-events: none;
+    }
+    @keyframes pulse {
+      0%,100% { transform:translate(-50%,-50%) scale(1); opacity:.4; }
+      50%      { transform:translate(-50%,-50%) scale(1.12); opacity:.9; }
+    }
+    .atom {
+      position: absolute; width: 480px; height: 480px;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+    .ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 1px solid rgba(57,255,20,0.10);
+    }
+    .ring:nth-child(1) { animation: sp1 18s linear infinite; transform: rotateX(70deg); }
+    .ring:nth-child(2) { animation: sp2 24s linear infinite; transform: rotateX(70deg) rotateZ(60deg); }
+    .ring:nth-child(3) { animation: sp3 30s linear infinite; transform: rotateX(70deg) rotateZ(120deg); }
+    @keyframes sp1 { to { transform: rotateX(70deg) rotateZ(360deg); } }
+    @keyframes sp2 { to { transform: rotateX(70deg) rotateZ(420deg); } }
+    @keyframes sp3 { to { transform: rotateX(70deg) rotateZ(480deg); } }
+
+    #cloudCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hazard-badge {
+      display: inline-block;
+      background: var(--green); color: var(--black);
+      font-size: .65rem; letter-spacing: .25em;
+      padding: .3rem .9rem; margin-bottom: 2rem;
+      text-transform: uppercase;
+      animation: fadeDown .8s ease both;
+      position: relative; z-index: 2;
+    }
+    .logo {
+      font-family: 'Black Ops One', cursive;
+      font-size: clamp(3rem, 9vw, 7.5rem);
+      line-height: .95; color: var(--cream);
+      text-shadow: 0 0 60px rgba(57,255,20,.3), 0 0 120px rgba(57,255,20,.1);
+      position: relative; z-index: 2;
+      animation: fadeDown .9s .1s ease both;
+    }
+    .logo span { color: var(--green); display: block; }
+    .tagline {
+      margin-top: 1.5rem;
+      font-size: clamp(.7rem,1.5vw,.95rem);
+      letter-spacing: .35em; text-transform: uppercase;
+      color: rgba(240,230,200,.55);
+      position: relative; z-index: 2;
+      animation: fadeDown 1s .25s ease both;
+    }
+    .hero-cta {
+      margin-top: 3rem; position: relative; z-index: 2;
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeDown 1s .4s ease both;
+    }
+    .btn {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .8rem; letter-spacing: .2em; text-transform: uppercase;
+      padding: .85rem 2rem; border: none; cursor: pointer; text-decoration: none;
+      transition: all .2s;
+    }
+    .btn-primary { background: var(--green); color: var(--black); }
+    .btn-primary:hover { background:#fff; box-shadow:0 0 30px rgba(57,255,20,.5); }
+    .btn-outline { background:transparent; color:var(--cream); border:1px solid rgba(240,230,200,.3); }
+    .btn-outline:hover { border-color:var(--green); color:var(--green); }
+    @keyframes fadeDown {
+      from { opacity:0; transform:translateY(-16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .ticker-wrap { background:var(--green); color:var(--black); overflow:hidden; white-space:nowrap; padding:.65rem 0; }
+    .ticker { display:inline-block; animation:ticker 28s linear infinite; font-size:.75rem; letter-spacing:.25em; text-transform:uppercase; }
+    @keyframes ticker { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+
+    .intel {
+      background:var(--dark-green);
+      border-top:1px solid rgba(57,255,20,.2);
+      border-bottom:1px solid rgba(57,255,20,.2);
+      padding:5rem 2rem; text-align:center;
+      position:relative; overflow:hidden;
+    }
+    .intel::before {
+      content:'CLASSIFIED';
+      position:absolute; font-family:'Black Ops One',cursive;
+      font-size:12rem; color:rgba(57,255,20,.04);
+      top:50%; left:50%; transform:translate(-50%,-50%) rotate(-15deg);
+      white-space:nowrap; pointer-events:none;
+    }
+    .intel-label {
+      display:inline-block;
+      border:1px solid var(--green); color:var(--green);
+      font-size:.65rem; letter-spacing:.3em;
+      padding:.25rem .75rem; margin-bottom:2.5rem;
+      text-transform:uppercase;
+    }
+    .intel-quote {
+      font-family:'Black Ops One',cursive;
+      font-size:clamp(1.8rem,4vw,3.5rem);
+      line-height:1.1; max-width:800px; margin:0 auto; color:var(--cream);
+    }
+    .intel-quote em { color:var(--green); font-style:normal; }
+    .intel-source { margin-top:2rem; font-size:.7rem; letter-spacing:.3em; text-transform:uppercase; color:rgba(240,230,200,.4); }
+    .intel-source span { color:var(--amber); }
+
+    .products { padding:6rem 2rem; max-width:1200px; margin:0 auto; }
+    .section-label { font-size:.65rem; letter-spacing:.4em; text-transform:uppercase; color:var(--green); margin-bottom:.75rem; }
+    .section-title { font-family:'Black Ops One',cursive; font-size:clamp(2rem,5vw,4rem); line-height:1; margin-bottom:3.5rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5px; }
+    .card { background:var(--mid); padding:2.5rem 2rem; position:relative; overflow:hidden; transition:transform .3s; }
+    .card:hover { transform:translateY(-4px); }
+    .card:hover .card-glow { opacity:1; }
+    .card-glow { position:absolute; inset:0; background:radial-gradient(circle at top left,rgba(57,255,20,.06),transparent 60%); opacity:0; transition:opacity .3s; }
+    .card-icon { font-size:2.5rem; margin-bottom:1.25rem; }
+    .card-name { font-family:'Oswald',sans-serif; font-weight:700; font-size:1.3rem; letter-spacing:.05em; text-transform:uppercase; margin-bottom:.5rem; }
+    .card-desc { font-size:.78rem; line-height:1.7; color:rgba(240,230,200,.6); margin-bottom:1.5rem; }
+    .card-tag { display:inline-block; font-size:.6rem; letter-spacing:.25em; text-transform:uppercase; padding:.2rem .6rem; border:1px solid var(--green); color:var(--green); }
+
+    .meter-section { padding:5rem 2rem; background:#0d0d0d; text-align:center; }
+    .meter-wrap { display:inline-block; margin:3rem auto 0; }
+    .meter-bar-bg { width:320px; height:12px; background:#1a1a1a; border:1px solid rgba(57,255,20,.2); position:relative; overflow:hidden; }
+    .meter-bar-fill { height:100%; background:linear-gradient(90deg,#1a5c08,var(--green)); animation:fill 2.5s ease-out forwards; width:0; box-shadow:0 0 12px var(--green); }
+    @keyframes fill { to { width:92%; } }
+    .meter-labels { display:flex; justify-content:space-between; margin-top:.5rem; font-size:.6rem; letter-spacing:.2em; color:rgba(240,230,200,.4); }
+    .meter-value { font-family:'Black Ops One',cursive; font-size:4rem; color:var(--green); text-shadow:0 0 30px rgba(57,255,20,.5); margin-top:1.5rem; line-height:1; }
+    .meter-unit { font-size:.75rem; letter-spacing:.3em; color:rgba(240,230,200,.5); margin-top:.5rem; }
+
+    footer { border-top:1px solid rgba(57,255,20,.15); padding:3rem 2rem; display:flex; flex-direction:column; align-items:center; gap:1rem; text-align:center; }
+    .footer-logo { font-family:'Black Ops One',cursive; font-size:1.5rem; letter-spacing:.05em; }
+    .footer-logo span { color:var(--green); }
+    .footer-legal { font-size:.65rem; letter-spacing:.15em; color:rgba(240,230,200,.3); text-transform:uppercase; }
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:var(--black); }
+    ::-webkit-scrollbar-thumb { background:var(--green); }
+  </style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="atom">
+    <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+  </div>
+  <canvas id="cloudCanvas" width="1505" height="726"></canvas>
+
+  <div class="hazard-badge">☢ Est. 2024 · Handle With Care</div>
+  <h1 class="logo">Nuclear<span>Dust</span>Coffee</h1>
+  <p class="tagline">Radioactively Bold · Critically Strong · Dangerously Good</p>
+  <div class="hero-cta">
+    <a href="file:///Users/robertmerz/Downloads/index%20(10).html#products" class="btn btn-primary">Shop the Fallout</a>
+    <a href="file:///Users/robertmerz/Downloads/index%20(10).html#intel" class="btn btn-outline">Read the Intel</a>
+  </div>
+</section>
+
+<div class="ticker-wrap">
+  <div class="ticker">
+    ☢ &nbsp; NUCLEAR DUST COFFEE &nbsp; · &nbsp; CRITICALLY STRONG &nbsp; · &nbsp; DANGEROUSLY GOOD &nbsp; · &nbsp; ☢ &nbsp; NUCLEAR DUST COFFEE &nbsp; · &nbsp; CRITICALLY STRONG &nbsp; · &nbsp; DANGEROUSLY GOOD &nbsp; · &nbsp; ☢ &nbsp; NUCLEAR DUST COFFEE &nbsp; · &nbsp; CRITICALLY STRONG &nbsp; · &nbsp; DANGEROUSLY GOOD &nbsp; · &nbsp; ☢ &nbsp; NUCLEAR DUST COFFEE &nbsp; · &nbsp; CRITICALLY STRONG &nbsp; · &nbsp; DANGEROUSLY GOOD &nbsp; · &nbsp;
+  </div>
+</div>
+
+<section class="intel" id="intel">
+  <div class="intel-label">⚠ Intercepted Intel · Eyes Only</div>
+  <h2 class="intel-quote">
+    Word has it — <em>The President wants<br>the Nuclear Dust.</em>
+  </h2>
+  <p class="intel-source">Source: <span>Highly Classified</span> &nbsp;·&nbsp; Clearance Level: <span>COFFEE BLACK</span></p>
+</section>
+
+<section class="products" id="products">
+  <p class="section-label">☢ The Arsenal</p>
+  <h2 class="section-title">Choose Your Fallout</h2>
+  <div class="grid">
+    <div class="card"><div class="card-glow"></div><div class="card-icon">💣</div><div class="card-name">Ground Zero Espresso</div><p class="card-desc">The blast at the center of it all. A dark, dense espresso shot that leaves no survivors — only converts.</p><span class="card-tag">Critical Roast</span></div>
+    <div class="card"><div class="card-glow"></div><div class="card-icon">☢</div><div class="card-name">Fallout Blend</div><p class="card-desc">Our signature blend — smoky, deep, with an amber afterglow. The dust settles, the flavor doesn't.</p><span class="card-tag">Signature Blend</span></div>
+    <div class="card"><div class="card-glow"></div><div class="card-icon">⚗️</div><div class="card-name">Cold Fusion Cold Brew</div><p class="card-desc">Slow-steeped 24 hours in classified conditions. Ice cold. Nuclear powered. Smooth as a reactor at idle.</p><span class="card-tag">Cold Brew</span></div>
+    <div class="card"><div class="card-glow"></div><div class="card-icon">🌑</div><div class="card-name">Dark Matter Roast</div><p class="card-desc">So dark, light can't escape it. For those who consider a double espresso a warm-up lap.</p><span class="card-tag">Ultra Dark</span></div>
+  </div>
+</section>
+
+<section class="meter-section">
+  <p class="section-label">☢ Caffeine Radiation Index</p>
+  <h2 style="font-family:&#39;Black Ops One&#39;,cursive;font-size:clamp(1.5rem,3vw,2.5rem);">Current Threat Level</h2>
+  <div class="meter-wrap">
+    <div class="meter-bar-bg"><div class="meter-bar-fill"></div></div>
+    <div class="meter-labels"><span>DECAF DANGER</span><span>NUCLEAR</span></div>
+    <div class="meter-value">9200 mg</div>
+    <div class="meter-unit">Caffeine per batch · Proceed with caution</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Nuclear<span>Dust</span>Coffee</div>
+  <p class="footer-legal">nucleardustcoffee.com &nbsp;·&nbsp; Raleigh, NC &nbsp;·&nbsp; ☢ All rights reserved 2024</p>
+  <p class="footer-legal">No actual nuclear material was used in the making of this coffee. Probably.</p>
+</footer>
+
+<script>
+const canvas = document.getElementById('cloudCanvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  const hero = canvas.parentElement;
+  W = canvas.width  = hero.offsetWidth;
+  H = canvas.height = hero.offsetHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ─── SEEDED RNG ────────────────────────────────────────────────
+function makeRand(seed) {
+  let s = seed >>> 0;
+  return () => {
+    s = Math.imul(1664525, s) + 1013904223 >>> 0;
+    return s / 0xffffffff;
+  };
+}
+
+// ─── DRAW FLASH / INITIAL EXPLOSION ───────────────────────────
+function drawFlash(cx, cy, radius, alpha) {
+  const g = ctx.createRadialGradient(cx,cy,0, cx,cy,radius);
+  g.addColorStop(0,   `rgba(255,255,220,${alpha})`);
+  g.addColorStop(0.2, `rgba(255,220,80,${alpha*0.8})`);
+  g.addColorStop(0.5, `rgba(255,100,20,${alpha*0.5})`);
+  g.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.arc(cx,cy,radius,0,Math.PI*2);
+  ctx.fillStyle = g;
+  ctx.fill();
+}
+
+// ─── DRAW MUSHROOM CLOUD ───────────────────────────────────────
+function drawMushroom(cx, baseY, scale, progress, seed) {
+  const rand = makeRand(seed);
+  const p    = Math.min(progress, 1);
+  if (p <= 0) return;
+
+  // Shockwave ring
+  const shockR = scale * 1.5 * p;
+  const sg = ctx.createRadialGradient(cx,baseY,shockR*0.5, cx,baseY,shockR);
+  sg.addColorStop(0,   'rgba(255,180,60,0)');
+  sg.addColorStop(0.6, 'rgba(255,160,40,0.12)');
+  sg.addColorStop(0.85,'rgba(200,100,20,0.18)');
+  sg.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.ellipse(cx,baseY, shockR, shockR*0.18, 0, 0, Math.PI*2);
+  ctx.fillStyle = sg;
+  ctx.fill();
+
+  // Ground dust base
+  const dustR = scale * 1.1 * Math.min(p*2,1);
+  const dg = ctx.createRadialGradient(cx,baseY,0, cx,baseY,dustR);
+  dg.addColorStop(0,   'rgba(200,120,40,0.55)');
+  dg.addColorStop(0.5, 'rgba(140,80,20,0.30)');
+  dg.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.ellipse(cx,baseY, dustR, dustR*0.22, 0, 0, Math.PI*2);
+  ctx.fillStyle = dg;
+  ctx.fill();
+
+  // Stem
+  const stemH = scale * 1.9 * p;
+  const stemTop = baseY - stemH;
+  const stemW   = scale * 0.17;
+  const layers  = 18;
+
+  for (let i=0; i<=layers; i++) {
+    const t   = i/layers;
+    const y   = baseY - stemH*t;
+    const wob = (rand()-0.5)*stemW*0.4;
+    // hourglass shape
+    const wf  = 0.45 + 0.55*Math.pow(Math.abs(t-0.42),1.3);
+    const rx  = stemW*wf + Math.abs(wob);
+    const ry  = (stemH/layers)*0.9;
+    const heat= Math.max(0, 1-t*0.75);
+    const r   = Math.round(80 + heat*175);
+    const g2  = Math.round(20 + heat*75);
+    const b   = Math.round(5  + heat*15);
+    const a   = 0.70 - t*0.25;
+    const lg  = ctx.createRadialGradient(cx+wob,y,0, cx+wob,y,rx);
+    lg.addColorStop(0,  `rgba(${r+50},${g2+20},${b},${a})`);
+    lg.addColorStop(0.5,`rgba(${r},${g2},${b},${a*0.7})`);
+    lg.addColorStop(1,  'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.ellipse(cx+wob, y, rx, ry, 0, 0, Math.PI*2);
+    ctx.fillStyle = lg;
+    ctx.fill();
+  }
+
+  // Cap blobs (cauliflower)
+  const capP  = Math.max(0,(p-0.12)/0.88);
+  if (capP<=0) return;
+  const capCY = stemTop + scale*0.04;
+  const capR  = scale*0.75*capP;
+
+  const blobCount = 28;
+  for (let i=0;i<blobCount;i++) {
+    const angle = (i/blobCount)*Math.PI*2;
+    const ring  = rand()*0.45+0.22;
+    const bx    = cx + Math.cos(angle)*capR*ring;
+    const by    = capCY + Math.sin(angle)*capR*0.40*ring - capR*0.06;
+    const br    = capR*(rand()*0.30+0.24);
+    const dist  = Math.hypot(bx-cx, by-capCY)/capR;
+    const heat2 = Math.max(0,1-dist*1.4);
+    const r2    = Math.round(45  + heat2*210);
+    const g3    = Math.round(30  + heat2*85);
+    const b2    = Math.round(20  + heat2*15);
+    const a2    = 0.50 + rand()*0.30;
+    const bg    = ctx.createRadialGradient(bx,by,0,bx,by,br);
+    bg.addColorStop(0,   `rgba(${r2+40},${g3+20},${b2},${a2})`);
+    bg.addColorStop(0.45,`rgba(${r2},${g3},${b2},${a2*0.72})`);
+    bg.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(bx,by,br,0,Math.PI*2);
+    ctx.fillStyle = bg;
+    ctx.fill();
+  }
+
+  // Fireball core
+  const fbR = capR*0.40*capP;
+  const fg  = ctx.createRadialGradient(cx,capCY+fbR*0.12,0, cx,capCY,fbR);
+  fg.addColorStop(0,   'rgba(255,240,140,0.85)');
+  fg.addColorStop(0.25,'rgba(255,180,30,0.65)');
+  fg.addColorStop(0.6, 'rgba(220,70,10,0.40)');
+  fg.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.arc(cx,capCY+fbR*0.12,fbR,0,Math.PI*2);
+  ctx.fillStyle = fg;
+  ctx.fill();
+
+  // Ambient bloom
+  const bloom = ctx.createRadialGradient(cx,capCY,0, cx,capCY,capR*1.15);
+  bloom.addColorStop(0,   'rgba(255,110,20,0.09)');
+  bloom.addColorStop(0.6, 'rgba(255,60,10,0.04)');
+  bloom.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.arc(cx,capCY,capR*1.15,0,Math.PI*2);
+  ctx.fillStyle = bloom;
+  ctx.fill();
+
+  // Rising debris
+  if (p > 0.25) {
+    const dr = makeRand(seed+777);
+    for (let i=0;i<30;i++) {
+      const ang = dr()*Math.PI*2;
+      const dst = dr()*capR*0.88;
+      const px2 = cx + Math.cos(ang)*dst;
+      const py2 = capCY + Math.sin(ang)*dst*0.35 - dr()*stemH*0.45;
+      const pr  = dr()*2.5+0.5;
+      const pa  = (dr()*0.45+0.15)*Math.min(1,(p-0.25)*3);
+      ctx.beginPath();
+      ctx.arc(px2,py2,pr,0,Math.PI*2);
+      ctx.fillStyle = `rgba(255,${Math.round(dr()*100+80)},20,${pa})`;
+      ctx.fill();
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NUCLEAR DUST COFFEE — CANVAS RENDERER
+// ══════════════════════════════════════════════════════════════
+
+// ── STARS (static, drawn once) ────────────────────────────────
+const STARS = Array.from({length:120}, () => ({
+  x: Math.random(), y: Math.random() * 0.55,
+  r: Math.random() * 1.4 + 0.3,
+  a: Math.random() * 0.6 + 0.2,
+  twinkle: Math.random() * Math.PI * 2,
+}));
+
+function drawStars(now) {
+  STARS.forEach(s => {
+    const tw = 0.75 + 0.25 * Math.sin(now * 0.0008 + s.twinkle);
+    ctx.beginPath();
+    ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(220,230,255,${s.a * tw})`;
+    ctx.fill();
+  });
+}
+
+// ── SKY GRADIENT ──────────────────────────────────────────────
+function drawSky() {
+  const sg = ctx.createLinearGradient(0,0,0,H*0.92);
+  sg.addColorStop(0,   'rgba(2,6,2,0)');
+  sg.addColorStop(0.5, 'rgba(8,18,6,0.18)');
+  sg.addColorStop(1,   'rgba(20,35,12,0.35)');
+  ctx.fillStyle = sg;
+  ctx.fillRect(0,0,W,H*0.92);
+}
+
+// ── HORIZON GLOW (builds up as clouds grow) ───────────────────
+function drawHorizonGlow(intensity) {
+  if (intensity <= 0) return;
+  const hg = ctx.createLinearGradient(0, H*0.75, 0, H*0.92);
+  hg.addColorStop(0,   `rgba(0,0,0,0)`);
+  hg.addColorStop(0.5, `rgba(200,80,10,${intensity*0.18})`);
+  hg.addColorStop(1,   `rgba(255,140,20,${intensity*0.35})`);
+  ctx.fillStyle = hg;
+  ctx.fillRect(0, H*0.75, W, H*0.17);
+}
+
+// ── IMPROVED JET ──────────────────────────────────────────────
+function drawJet(cx, cy, sc, now) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(sc, sc);
+
+  // afterburner flicker
+  const flicker = 0.7 + 0.3 * Math.sin(now * 0.025 + cx * 0.1);
+
+  // ── TWIN ENGINE AFTERBURNER (draw BEHIND fuselage) ──
+  [[-50,-5],[-50,5]].forEach(([ex,ey]) => {
+    // Long flame cone
+    const fl = ctx.createRadialGradient(ex,ey,0, ex-20,ey,28*flicker);
+    fl.addColorStop(0,   `rgba(255,240,180,${0.95*flicker})`);
+    fl.addColorStop(0.15,`rgba(255,160,30,${0.80*flicker})`);
+    fl.addColorStop(0.45,`rgba(255,70,5,${0.50*flicker})`);
+    fl.addColorStop(0.75,`rgba(180,30,0,${0.20*flicker})`);
+    fl.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.ellipse(ex-14*flicker, ey, 22*flicker, 5*flicker, 0, 0, Math.PI*2);
+    ctx.fillStyle = fl;
+    ctx.fill();
+    // Nozzle glow ring
+    const ng = ctx.createRadialGradient(ex,ey,0,ex,ey,9);
+    ng.addColorStop(0,'rgba(255,220,120,0.9)');
+    ng.addColorStop(0.5,'rgba(255,120,20,0.5)');
+    ng.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(ex,ey,9,0,Math.PI*2);
+    ctx.fillStyle=ng; ctx.fill();
+  });
+
+  // ── MAIN WING (large delta sweep) ──
+  const wingTop = ctx.createLinearGradient(0,-42,0,0);
+  wingTop.addColorStop(0,  'rgba(175,182,165,0.97)');
+  wingTop.addColorStop(0.6,'rgba(135,142,125,0.97)');
+  wingTop.addColorStop(1,  'rgba(95,102,85,0.97)');
+
+  // LEFT wing
+  ctx.beginPath();
+  ctx.moveTo(22,-4);
+  ctx.bezierCurveTo(10,-10, -8,-20, -22,-40);
+  ctx.lineTo(-32,-38);
+  ctx.bezierCurveTo(-20,-22, -5,-10, 5,-2);
+  ctx.lineTo(20, 4);
+  ctx.closePath();
+  ctx.fillStyle=wingTop; ctx.fill();
+  ctx.strokeStyle='rgba(70,78,62,0.35)'; ctx.lineWidth=0.7; ctx.stroke();
+
+  // RIGHT wing (mirror)
+  ctx.beginPath();
+  ctx.moveTo(22, 4);
+  ctx.bezierCurveTo(10,10, -8,20, -22,40);
+  ctx.lineTo(-32,38);
+  ctx.bezierCurveTo(-20,22, -5,10, 5,2);
+  ctx.lineTo(20,-4);
+  ctx.closePath();
+  ctx.fillStyle=wingTop; ctx.fill(); ctx.stroke();
+
+  // Wing surface sheen
+  [-1,1].forEach(s => {
+    const ws = ctx.createRadialGradient(-5,s*18,0,-5,s*18,24);
+    ws.addColorStop(0,'rgba(220,228,215,0.25)');
+    ws.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(-5,s*18,20,10,-0.4*s,0,Math.PI*2);
+    ctx.fillStyle=ws; ctx.fill();
+  });
+
+  // ── FUSELAGE ──
+  const fuseG = ctx.createLinearGradient(0,-8,0,8);
+  fuseG.addColorStop(0,  'rgba(190,198,182,1.0)');
+  fuseG.addColorStop(0.35,'rgba(155,162,145,1.0)');
+  fuseG.addColorStop(0.7,'rgba(110,118,100,1.0)');
+  fuseG.addColorStop(1,  'rgba(75,82,66,1.0)');
+
+  ctx.beginPath();
+  ctx.moveTo(58,0);
+  ctx.bezierCurveTo(45,-6, 20,-8, 0,-7);
+  ctx.bezierCurveTo(-18,-7,-36,-6,-52,-5);
+  ctx.lineTo(-52,5);
+  ctx.bezierCurveTo(-36,6,-18,7,0,7);
+  ctx.bezierCurveTo(20,8, 45,6, 58,0);
+  ctx.closePath();
+  ctx.fillStyle=fuseG; ctx.fill();
+  ctx.strokeStyle='rgba(80,88,70,0.4)'; ctx.lineWidth=0.7; ctx.stroke();
+
+  // Fuselage highlight ridge
+  ctx.beginPath();
+  ctx.moveTo(55,0); ctx.bezierCurveTo(35,-3,10,-4,-20,-3);
+  ctx.strokeStyle='rgba(220,228,210,0.30)'; ctx.lineWidth=1.5; ctx.stroke();
+
+  // ── CANOPY ──
+  ctx.beginPath();
+  ctx.ellipse(30,-4,12,4,-0.12,0,Math.PI*2);
+  ctx.fillStyle='rgba(30,32,28,0.9)'; ctx.fill();
+  // Glass
+  ctx.beginPath();
+  ctx.ellipse(31,-4,9,3,-0.12,0,Math.PI*2);
+  const cg = ctx.createLinearGradient(22,-7,40,-2);
+  cg.addColorStop(0,'rgba(160,215,255,0.50)');
+  cg.addColorStop(0.4,'rgba(100,170,240,0.28)');
+  cg.addColorStop(1,'rgba(40,80,160,0.08)');
+  ctx.fillStyle=cg; ctx.fill();
+  // Canopy frame
+  ctx.strokeStyle='rgba(60,65,55,0.6)'; ctx.lineWidth=0.6; ctx.stroke();
+  // Glint
+  ctx.beginPath(); ctx.ellipse(27,-5,4,1.5,-0.2,0,Math.PI*2);
+  ctx.fillStyle='rgba(255,255,255,0.30)'; ctx.fill();
+
+  // ── INTAKE SCOOPS ──
+  [-1,1].forEach(s => {
+    ctx.beginPath();
+    ctx.ellipse(5, s*6, 8, 3, 0.1*s, 0, Math.PI*2);
+    ctx.fillStyle='rgba(30,32,26,0.92)'; ctx.fill();
+    ctx.strokeStyle='rgba(60,65,55,0.5)'; ctx.lineWidth=0.5; ctx.stroke();
+    // Intake highlight
+    ctx.beginPath(); ctx.ellipse(7,s*6,5,1.8,0.1*s,0,Math.PI*2);
+    ctx.fillStyle=`rgba(100,110,90,0.40)`; ctx.fill();
+  });
+
+  // ── TAIL ASSEMBLY ──
+  // Vertical stabiliser
+  ctx.beginPath();
+  ctx.moveTo(-30,-5);
+  ctx.bezierCurveTo(-32,-10,-42,-22,-50,-28);
+  ctx.lineTo(-46,-27);
+  ctx.bezierCurveTo(-38,-20,-28,-8,-26,-5);
+  ctx.closePath();
+  ctx.fillStyle=fuseG; ctx.fill();
+  ctx.strokeStyle='rgba(70,78,62,0.35)'; ctx.lineWidth=0.6; ctx.stroke();
+
+  // Horizontal stabilisers
+  [-1,1].forEach(s=>{
+    ctx.beginPath();
+    ctx.moveTo(-34,s*5);
+    ctx.bezierCurveTo(-38,s*8,-48,s*16,-52,s*18);
+    ctx.lineTo(-54,s*16);
+    ctx.bezierCurveTo(-50,s*14,-40,s*6,-32,s*4);
+    ctx.closePath();
+    ctx.fillStyle=fuseG; ctx.fill(); ctx.stroke();
+  });
+
+  // ── ENGINE NACELLES ──
+  [-1,1].forEach(s=>{
+    ctx.beginPath();
+    ctx.ellipse(-42,s*5,12,4,0,0,Math.PI*2);
+    ctx.fillStyle='rgba(85,92,76,0.95)'; ctx.fill();
+    ctx.strokeStyle='rgba(60,68,52,0.5)'; ctx.lineWidth=0.5; ctx.stroke();
+    // Nozzle rim
+    ctx.beginPath();
+    ctx.ellipse(-52,s*5,5,3.5,0,0,Math.PI*2);
+    ctx.fillStyle='rgba(25,22,18,0.98)'; ctx.fill();
+  });
+
+  // ── WEAPON PYLONS (underwing hardpoints) ──
+  [-1,1].forEach(s=>{
+    ctx.beginPath();
+    ctx.rect(-15, s*14, 10, 3);
+    ctx.fillStyle='rgba(95,102,85,0.7)'; ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+// ── IMPROVED BOMB ─────────────────────────────────────────────
+function drawBomb(bx, by, vy) {
+  const angle = Math.atan2(vy, 4) + Math.PI/2;
+  ctx.save();
+  ctx.translate(bx, by);
+  ctx.rotate(angle);
+
+  // Body gradient
+  const bg = ctx.createLinearGradient(-5,0,5,0);
+  bg.addColorStop(0,  'rgba(90,95,80,0.95)');
+  bg.addColorStop(0.4,'rgba(155,162,140,0.97)');
+  bg.addColorStop(0.7,'rgba(120,128,108,0.97)');
+  bg.addColorStop(1,  'rgba(70,76,62,0.95)');
+
+  ctx.beginPath(); ctx.ellipse(0,0,4.5,13,0,0,Math.PI*2);
+  ctx.fillStyle=bg; ctx.fill();
+  // Body sheen
+  ctx.beginPath(); ctx.ellipse(-1,-2,2,8,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(200,208,188,0.20)'; ctx.fill();
+
+  // Nose cone
+  ctx.beginPath();
+  ctx.moveTo(-4,-12);
+  ctx.bezierCurveTo(-4,-20,4,-20,4,-12);
+  ctx.fillStyle='rgba(70,76,62,0.97)'; ctx.fill();
+
+  // Yellow warning band
+  ctx.beginPath(); ctx.rect(-4,2,8,3);
+  ctx.fillStyle='rgba(220,180,20,0.85)'; ctx.fill();
+
+  // Fins (4-way cruciform)
+  [[1,0],[0,1],[-1,0],[0,-1]].forEach(([fx,fy]) => {
+    ctx.save();
+    ctx.rotate(Math.atan2(fy,fx));
+    ctx.beginPath();
+    ctx.moveTo(0,8); ctx.lineTo(10,16); ctx.lineTo(0,16);
+    ctx.closePath();
+    ctx.fillStyle='rgba(100,108,88,0.92)'; ctx.fill();
+    ctx.restore();
+  });
+
+  ctx.restore();
+}
+
+// ── CONTRAIL ──────────────────────────────────────────────────
+function drawContrail(pts) {
+  if (pts.length < 2) return;
+  for (let i=1;i<pts.length;i++) {
+    const t = i/pts.length;
+    const w = 1 + t*3;
+    ctx.beginPath();
+    ctx.moveTo(pts[i-1].x,pts[i-1].y);
+    ctx.lineTo(pts[i].x,pts[i].y);
+    ctx.strokeStyle=`rgba(200,210,200,${t*0.22})`;
+    ctx.lineWidth=w; ctx.stroke();
+  }
+}
+
+// ── BOMB SMOKE TRAIL ──────────────────────────────────────────
+function drawTrail(pts) {
+  if (pts.length < 2) return;
+  for (let i=1;i<pts.length;i++) {
+    const t = i/pts.length;
+    ctx.beginPath();
+    ctx.moveTo(pts[i-1].x,pts[i-1].y);
+    ctx.lineTo(pts[i].x,pts[i].y);
+    ctx.strokeStyle=`rgba(80,75,60,${t*0.35})`;
+    ctx.lineWidth=1+t*3; ctx.stroke();
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ANIMATION STATE
+// ══════════════════════════════════════════════════════════════
+const LOOP      = 9000;
+const JET_DUR   = 4200;
+const DROP_AT   = 750;
+const CLOUD_DUR = 5500;
+const GY        = 0.90;  // ground y fraction
+
+// 5-plane V formation. yOff = spacing in scaled units, dropDelay = stagger
+const FORMATION = [
+  { yOff:   0, dropXFrac:0.50, dropDelay:   0, seed:1111, sc:0.092 },
+  { yOff: -42, dropXFrac:0.30, dropDelay: 280, seed:2222, sc:0.083 },
+  { yOff:  42, dropXFrac:0.70, dropDelay: 280, seed:3333, sc:0.083 },
+  { yOff: -84, dropXFrac:0.14, dropDelay: 580, seed:4444, sc:0.074 },
+  { yOff:  84, dropXFrac:0.86, dropDelay: 580, seed:5555, sc:0.074 },
+];
+
+let loopStart     = performance.now();
+let bombs         = [];
+let cloudTriggers = [];
+let contrails     = FORMATION.map(() => []);
+
+function resetLoop() {
+  bombs = FORMATION.map(f => ({
+    xFrac:     f.dropXFrac,
+    delay:     f.dropDelay,
+    yStart:    0,
+    dropped:   false,
+    exploded:  false,
+    x:0, y:0, vy:0,
+    trail:     [],
+    dropTime:  -1,
+    hitTime:   -1,
+    seed:      f.seed,
+    sc:        f.sc,
+  }));
+  cloudTriggers = [];
+  contrails     = FORMATION.map(() => []);
+}
+resetLoop();
+
+// ── MAIN RENDER LOOP ──────────────────────────────────────────
+function animate(now) {
+  ctx.clearRect(0,0,W,H);
+
+  const elapsed = (now - loopStart) % LOOP;
+  if (elapsed < 60 && now - loopStart > 700) {
+    loopStart = now - elapsed;
+    resetLoop();
+  }
+
+  // Sky & stars
+  drawSky();
+  drawStars(now);
+
+  // Horizon warmth based on cloud growth
+  const cloudIntensity = cloudTriggers.length > 0
+    ? Math.min(cloudTriggers.length / 5, 1) *
+      Math.min((elapsed - cloudTriggers[0].startElapsed) / 3000, 1)
+    : 0;
+  drawHorizonGlow(cloudIntensity);
+
+  const sc     = Math.min(W, 900) / 900 * 0.72;
+  const t      = Math.max(0, elapsed) / JET_DUR;
+  const leadX  = -150 + (W + 320) * Math.min(t, 1.06);
+  const leadY  = H * 0.10 + Math.sin(elapsed * 0.0013) * 8;
+
+  // ── FORMATION ───────────────────────────────────────────────
+  if (elapsed < JET_DUR + 600) {
+
+    // Collect contrail points for each jet
+    [...FORMATION].reverse().forEach((f, ri) => {
+      const fi   = FORMATION.length - 1 - ri;
+      const xLag = Math.abs(f.yOff) * 0.52;
+      const jx   = leadX - xLag;
+      const jy   = leadY + f.yOff * sc;
+
+      // Update contrail (twin engine trails)
+      [-1,1].forEach(s => {
+        if (!contrails[fi]) contrails[fi] = [];
+        // index 0 = upper, 1 = lower engine trail
+        const key = s > 0 ? 'lo' : 'hi';
+        // We flatten both into contrails[fi]
+      });
+      contrails[fi].push({ x: jx, y: jy });
+      if (contrails[fi].length > 55) contrails[fi].shift();
+
+      // Draw contrail first (behind jet)
+      if (contrails[fi].length > 2) {
+        // Upper trail
+        const upper = contrails[fi].map(p => ({ x:p.x, y:p.y - 5*sc }));
+        const lower = contrails[fi].map(p => ({ x:p.x, y:p.y + 5*sc }));
+        drawContrail(upper);
+        drawContrail(lower);
+      }
+
+      drawJet(jx, jy, sc, now);
+    });
+
+    // ── BOMBS ───────────────────────────────────────────────
+    if (elapsed >= DROP_AT) {
+      bombs.forEach((b, i) => {
+        const f    = FORMATION[i];
+        const xLag = Math.abs(f.yOff) * 0.52;
+        const jx   = leadX - xLag;
+        const jy   = leadY + f.yOff * sc;
+
+        if (elapsed >= DROP_AT + b.delay && !b.dropped) {
+          b.dropped  = true;
+          b.dropTime = elapsed;
+          b.x        = jx;
+          b.yStart   = jy + 16*sc;
+          b.y        = b.yStart;
+        }
+
+        if (b.dropped && !b.exploded) {
+          const dt = elapsed - b.dropTime;
+          b.vy = 0.00029 * dt;
+          b.x  = jx + dt * 0.035;
+          b.y  = b.yStart + 0.5 * 0.00029 * dt * dt;
+          b.trail.push({x:b.x, y:b.y});
+          if (b.trail.length > 40) b.trail.shift();
+
+          if (b.y >= H * GY) {
+            b.y = H*GY; b.exploded = true; b.hitTime = elapsed;
+            cloudTriggers.push({ x:b.x, seed:b.seed, sc:b.sc, startElapsed:elapsed });
+          } else {
+            drawTrail(b.trail);
+            drawBomb(b.x, b.y, b.vy * 55);
+          }
+        }
+
+        // Flash
+        if (b.exploded && b.hitTime >= 0) {
+          const ft = elapsed - b.hitTime;
+          if (ft < 800) {
+            const fa = Math.max(0, 1 - ft/500);
+            // Shockwave ring
+            if (ft > 60) {
+              const sr = (ft - 60) * 0.45 * (W/1200);
+              ctx.beginPath();
+              ctx.arc(b.x, H*GY, sr, 0, Math.PI*2);
+              ctx.strokeStyle=`rgba(255,180,60,${fa*0.4})`;
+              ctx.lineWidth=2; ctx.stroke();
+            }
+            drawFlash(b.x, H*GY, (45+ft*0.55)*(W/1200), fa);
+          }
+        }
+      });
+    }
+  }
+
+  // ── MUSHROOM CLOUDS ──────────────────────────────────────────
+  cloudTriggers.forEach(c => {
+    const prog  = Math.min((elapsed - c.startElapsed) / CLOUD_DUR, 1);
+    if (prog <= 0) return;
+    const eased = 1 - Math.pow(1 - prog, 2.1);
+    drawMushroom(c.x, H*GY, c.sc*Math.min(W,1200), eased, c.seed);
+  });
+
+  requestAnimationFrame(animate);
+}
+
+requestAnimationFrame(animate);
+</script>
+
+
+</body></html>
