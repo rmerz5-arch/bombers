@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nuclear Dust Coffee</title>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&family=Oswald:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black: #080a06;
+      --green: #39FF14;
+      --amber: #C8963E;
+      --cream: #f0e6c8;
+      --dark-green: #0a1f05;
+      --mid: #1a1a1a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--cream);
+      font-family: 'Share Tech Mono', monospace;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.35;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* Radial glow */
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(57,255,20,0.08) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+      50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+    }
+
+    /* Rotating atom rings */
+    .atom {
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(57,255,20,0.15);
+    }
+    .ring:nth-child(1) { animation: spin1 18s linear infinite; transform: rotateX(70deg) rotateZ(0deg); }
+    .ring:nth-child(2) { animation: spin2 24s linear infinite; transform: rotateX(70deg) rotateZ(60deg); }
+    .ring:nth-child(3) { animation: spin3 30s linear infinite; transform: rotateX(70deg) rotateZ(120deg); }
+
+    @keyframes spin1 { to { transform: rotateX(70deg) rotateZ(360deg); } }
+    @keyframes spin2 { to { transform: rotateX(70deg) rotateZ(420deg); } }
+    @keyframes spin3 { to { transform: rotateX(70deg) rotateZ(480deg); } }
+
+    .hazard-badge {
+      display: inline-block;
+      background: var(--green);
+      color: var(--black);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      padding: 0.3rem 0.9rem;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      animation: fadeDown 0.8s ease both;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      font-family: 'Black Ops One', cursive;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      color: var(--cream);
+      text-shadow: 0 0 60px rgba(57,255,20,0.3), 0 0 120px rgba(57,255,20,0.1);
+      position: relative;
+      z-index: 2;
+      animation: fadeDown 0.9s 0.1s ease both;
+    }
+
+    .logo span {
+      color: var(--green);
+      display: block;
+    }
+
+    .tagline {
+      margin-top: 1.5rem;
+      font-size: clamp(0.75rem, 1.5vw, 1rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(240,230,200,0.55);
+      position: relative;
+      z-index: 2;
+      animation: fadeDown 1s 0.25s ease both;
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeDown 1s 0.4s ease both;
+    }
+
+    .btn {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: var(--black);
+    }
+    .btn-primary:hover {
+      background: #fff;
+      box-shadow: 0 0 30px rgba(57,255,20,0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--cream);
+      border: 1px solid rgba(240,230,200,0.3);
+    }
+    .btn-outline:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      background: var(--green);
+      color: var(--black);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 0.65rem 0;
+    }
+    .ticker {
+      display: inline-block;
+      animation: ticker 28s linear infinite;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+    @keyframes ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── TRUMP SECTION ── */
+    .intel {
+      background: var(--dark-green);
+      border-top: 1px solid rgba(57,255,20,0.2);
+      border-bottom: 1px solid rgba(57,255,20,0.2);
+      padding: 5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intel::before {
+      content: 'CLASSIFIED';
+      position: absolute;
+      font-family: 'Black Ops One', cursive;
+      font-size: 12rem;
+      color: rgba(57,255,20,0.04);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .intel-label {
+      display: inline-block;
+      border: 1px solid var(--green);
+      color: var(--green);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      padding: 0.25rem 0.75rem;
+      margin-bottom: 2.5rem;
+      text-transform: uppercase;
+    }
+
+    .intel-quote {
+      font-family: 'Black Ops One', cursive;
+      font-size: clamp(1.8rem, 4vw, 3.5rem);
+      line-height: 1.1;
+      max-width: 800px;
+      margin: 0 auto;
+      color: var(--cream);
+    }
+
+    .intel-quote em {
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .intel-source {
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(240,230,200,0.4);
+    }
+
+    .intel-source span {
+      color: var(--amber);
+    }
+
+    /* ── PRODUCTS ── */
+    .products {
+      padding: 6rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: 'Black Ops One', cursive;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1;
+      margin-bottom: 3.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5px;
+    }
+
+    .card {
+      background: var(--mid);
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+    .card:hover { transform: translateY(-4px); }
+    .card:hover .card-glow { opacity: 1; }
+
+    .card-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(57,255,20,0.06), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-name {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: rgba(240,230,200,0.6);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--green);
+      color: var(--green);
+    }
+
+    /* ── RADIATION METER ── */
+    .meter-section {
+      padding: 5rem 2rem;
+      background: #0d0d0d;
+      text-align: center;
+    }
+
+    .meter-wrap {
+      display: inline-block;
+      margin: 3rem auto 0;
+      position: relative;
+    }
+
+    .meter-bar-bg {
+      width: 320px;
+      height: 12px;
+      background: #1a1a1a;
+      border: 1px solid rgba(57,255,20,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .meter-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1a5c08, var(--green));
+      animation: fill 2.5s ease-out forwards;
+      width: 0;
+      box-shadow: 0 0 12px var(--green);
+    }
+
+    @keyframes fill { to { width: 92%; } }
+
+    .meter-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: rgba(240,230,200,0.4);
+    }
+
+    .meter-value {
+      font-family: 'Black Ops One', cursive;
+      font-size: 4rem;
+      color: var(--green);
+      text-shadow: 0 0 30px rgba(57,255,20,0.5);
+      margin-top: 1.5rem;
+      line-height: 1;
+    }
+
+    .meter-unit {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: rgba(240,230,200,0.5);
+      margin-top: 0.5rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(57,255,20,0.15);
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-logo span { color: var(--green); }
+
+    .footer-legal {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: rgba(240,230,200,0.3);
+      text-transform: uppercase;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--green); }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="atom">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
+    <div class="hazard-badge">☢ Est. 2024 · Handle With Care</div>
+    <h1 class="logo">Nuclear<span>Dust</span>Coffee</h1>
+    <p class="tagline">Radioactively Bold · Critically Strong · Dangerously Good</p>
+    <div class="hero-cta">
+      <a href="#products" class="btn btn-primary">Shop the Fallout</a>
+      <a href="#intel" class="btn btn-outline">Read the Intel</a>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      ☢ &nbsp; NUCLEAR DUST COFFEE &nbsp; · &nbsp; CRITICALLY STRONG &nbsp; · &nbsp; DANGEROUSLY GOOD &nbsp; · &nbsp; ☢ &nbsp; NUCLEAR DUST COFFEE &nbsp; · &nbsp; CRITICALLY STRONG &nbsp; · &nbsp; DANGEROUSLY GOOD &nbsp; · &nbsp; ☢ &nbsp; NUCLEAR DUST COFFEE &nbsp; · &nbsp; CRITICALLY STRONG &nbsp; · &nbsp; DANGEROUSLY GOOD &nbsp; · &nbsp; ☢ &nbsp; NUCLEAR DUST COFFEE &nbsp; · &nbsp; CRITICALLY STRONG &nbsp; · &nbsp; DANGEROUSLY GOOD &nbsp; · &nbsp;
+    </div>
+  </div>
+
+  <!-- TRUMP INTEL SECTION -->
+  <section class="intel" id="intel">
+    <div class="intel-label">⚠ Intercepted Intel · Eyes Only</div>
+    <h2 class="intel-quote">
+      Word has it — <em>Trump wants<br/>the Nuclear Dust.</em>
+    </h2>
+    <p class="intel-source">Source: <span>Highly Classified</span> &nbsp;·&nbsp; Clearance Level: <span>COFFEE BLACK</span></p>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="products" id="products">
+    <p class="section-label">☢ The Arsenal</p>
+    <h2 class="section-title">Choose Your Fallout</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-glow"></div>
+        <div class="card-icon">💣</div>
+        <div class="card-name">Ground Zero Espresso</div>
+        <p class="card-desc">The blast at the center of it all. A dark, dense espresso shot that leaves no survivors — only converts.</p>
+        <span class="card-tag">Critical Roast</span>
+      </div>
+      <div class="card">
+        <div class="card-glow"></div>
+        <div class="card-icon">☢</div>
+        <div class="card-name">Fallout Blend</div>
+        <p class="card-desc">Our signature blend — smoky, deep, with an amber afterglow. The dust settles, the flavor doesn't.</p>
+        <span class="card-tag">Signature Blend</span>
+      </div>
+      <div class="card">
+        <div class="card-glow"></div>
+        <div class="card-icon">⚗️</div>
+        <div class="card-name">Cold Fusion Cold Brew</div>
+        <p class="card-desc">Slow-steeped 24 hours in classified conditions. Ice cold. Nuclear powered. Smooth as a reactor at idle.</p>
+        <span class="card-tag">Cold Brew</span>
+      </div>
+      <div class="card">
+        <div class="card-glow"></div>
+        <div class="card-icon">🌑</div>
+        <div class="card-name">Dark Matter Roast</div>
+        <p class="card-desc">So dark, light can't escape it. For those who consider a double espresso a warm-up lap.</p>
+        <span class="card-tag">Ultra Dark</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RADIATION METER -->
+  <section class="meter-section">
+    <p class="section-label">☢ Caffeine Radiation Index</p>
+    <h2 style="font-family:'Black Ops One',cursive;font-size:clamp(1.5rem,3vw,2.5rem);">Current Threat Level</h2>
+    <div class="meter-wrap">
+      <div class="meter-bar-bg">
+        <div class="meter-bar-fill"></div>
+      </div>
+      <div class="meter-labels">
+        <span>DECAF DANGER</span>
+        <span>NUCLEAR</span>
+      </div>
+      <div class="meter-value">9200 mg</div>
+      <div class="meter-unit">Caffeine per batch · Proceed with caution</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Nuclear<span>Dust</span>Coffee</div>
+    <p class="footer-legal">nucleardustcoffee.com &nbsp;·&nbsp; Raleigh, NC &nbsp;·&nbsp; ☢ All rights reserved 2024</p>
+    <p class="footer-legal">No actual nuclear material was used in the making of this coffee. Probably.</p>
+  </footer>
+
+</body>
+</html>
